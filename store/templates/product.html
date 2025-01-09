@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Shop in style</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+                </div>
+            </div>
+        </header> 
+        <br><br><br> 
+            <div class="container">
+            <div class="card mb-3" >
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.name }}">
+                  </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <center>
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.desciption }}</p>
+                            <br><br>
+                            {% if product.is_sale %}
+                            <div class="d-flex justify-content-center small text-warning mb-2" >
+                                <div class="bi-star-fill"></div>
+                                &nbsp;&nbsp;Sale&nbsp;&nbsp;
+                                <div class="bi-star-fill"></div>
+                            </div>
+                            <strike>{{ product.price }} L.E</strike>
+                            &nbsp;
+                            {{ product.sale_price }} L.E
+                            {% else %}
+                            <p class="card-text">price:    {{ product.price }} L.E </p>
+
+                            {% endif %}
+                            <br><br><br><br><br><br><br>
+                            <a href="{% url 'home' %}" class="btn btn-secondary">Go to Home</a>
+                            <button type="button" class="btn btn-secondary"  id="add-to-cart"  value="{{product.id}}">Add to Cart</button>
+                        </center>
+                        </div>
+                  </div>
+                </div>
+            </div>
+        </div>            
+
+
+            <br><br><br><br><br><br><br><br><br><br>
+            <script>
+                // check if a button presses
+                    $(document).on('click', '#add-to-cart', function(e){
+                        e.preventDefault();
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url "cart_add" %}',
+                            data: {
+                                product_id: $('#add-to-cart').val(),
+                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                action:'post',
+                            },
+
+                            success: function(json){
+                                console.log(json)
+                                document.getElementById("cart_quantity").textContent = json.qty
+                            },
+
+                            error: function(xhr, errmsg, err){
+                                
+                            }
+                        });
+                        
+
+                    })
+
+            </script>
+
+            
+{% endblock %}
