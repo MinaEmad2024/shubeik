@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
-
+from django.db.models import Q
+import json
+from cart.cart import Cart
 
 
 def home(request):
@@ -24,6 +26,23 @@ def login_user(request):
         user = authenticate(request, username=username, password=password )
         if user is not None:
             login(request, user)
+            # do shopping cart stuff
+            current_user = Profile.objects.get(user__id=request.user.id)
+            # get their saved cart from database
+            saved_cart = current_user.old_cart
+            #convert db string to python dictionary 
+            if saved_cart:
+               #convert to dictionary using json 
+               converted_cart = json.loads(saved_cart)
+               #add the loaded cart dictionary to our session 
+               cart = Cart(request)
+               # loop through the cart and add the items from the dictionary 
+               for key, value in converted_cart.items():
+                    cart.db_add(product=key, quantity=value)
+
+
+
+
             messages.success(request, "Logged in successfully ")
             return redirect('home')
         else :
@@ -92,7 +111,7 @@ def update_info(request):
 def search(request):
      if request.method == "POST":
           searched = request.POST['searched']
-          searched = Product.objects.filter(name__icontains=searched)
+          searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
           #test for null
           if not searched:
                messages.success(request, "That Product doesn't exists, please try agian")
@@ -103,8 +122,6 @@ def search(request):
           return render(request,"search.html",{})
      
      
-
-
 def update_password(request):
      if request.user.is_authenticated:
           current_user = request.user
