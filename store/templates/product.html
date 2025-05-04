@@ -39,6 +39,21 @@
                             <p class="card-text">price:    {{ product.price }} L.E </p>
 
                             {% endif %}
+                            <br><br>
+                            <br><br>
+                            <div class="row justify-content-center">
+                            <div class="col-md-2">Quantity:</div>
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="qty-cart" >
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                            </div>
                             <br><br><br><br><br><br><br>
                             <a href="{% url 'home' %}" class="btn btn-secondary">Go to Home</a>
                             <button type="button" class="btn btn-secondary"  id="add-to-cart"  value="{{product.id}}">Add to Cart</button>
@@ -60,6 +75,7 @@
                             url: '{% url "cart_add" %}',
                             data: {
                                 product_id: $('#add-to-cart').val(),
+                                product_qty:$('#qty-cart option:selected').text(),
                                 csrfmiddlewaretoken: '{{ csrf_token }}',
                                 action:'post',
                             },
@@ -67,6 +83,7 @@
                             success: function(json){
                                 console.log(json)
                                 document.getElementById("cart_quantity").textContent = json.qty
+                                location.reload;
                             },
 
                             error: function(xhr, errmsg, err){
