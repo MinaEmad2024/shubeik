@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
-from .models import Profile
+from .models import Profile, Category, Vendor, Product, GOVERNRATES, Vendor_Category
 
 
 class UserInfoForm(forms.ModelForm):
@@ -88,3 +88,67 @@ class SignUpForm(UserCreationForm):
 		self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
 		self.fields['password2'].label = ''
 		self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+
+
+class CategoryForm(forms.ModelForm):
+	name = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add category'}), required=True)
+
+	class Meta:
+		model = Category
+		fields = ['name', ] 
+
+
+
+class VendorForm(forms.ModelForm):
+
+	name = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' Enter shop Name'}), required=True , error_messages = {'required':"Please Enter your Name1"})
+	image = forms.ImageField(label="upload shop image", required=False , error_messages = {'required':"Please Enter your Name2"})
+	# owner = forms.IntegerField(widget=forms.HiddenInput(), required=True, error_messages = {'required':"Please Enter your Name10"})
+	# owner = forms.ModelChoiceField(label="",queryset= User.objects.filter(id=request.user.id), widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':''}), required=True)
+	address = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add shop address'}), required=True,  error_messages = {'required':"Please Enter your Name3"})
+	governrate = forms.ChoiceField(label="Choose your Governrate", required=True, choices=GOVERNRATES, error_messages = {'required':"Please Enter your Name4"})
+	open_at = forms.TimeField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add open time'}), required=True, error_messages = {'required':"Please Enter your Name5"})
+	close_at = forms.TimeField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add close time'}), required=True, error_messages = {'required':"Please Enter your Name6"})
+	phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add phone'}), required=True, error_messages = {'required':"Please Enter your Name7"})
+	watts_app = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add wattsapp'}), required=True, error_messages = {'required':"Please Enter your Name8"})
+	email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' add email'}), required=True, error_messages = {'required':"Please Enter your Name9"})
+	category = forms.ChoiceField(label="Choose a Category", required=True, choices=Vendor_Category, error_messages = {'required':"Please Enter your Name10"})
+
+	def __init__(self, *args, **kwargs):
+			self.request = kwargs.pop("request")
+			super(VendorForm, self).__init__(*args, **kwargs)
+			# self.fields["owner"].queryset = Profile.objects.filter(user=self.request.user)
+
+	# def __init__(self, *args, **kwargs):
+	# 				user = kwargs.pop('user', None)
+	# 				super().__init__(*args, **kwargs)
+	# 				if user:
+	# 					self.fields['owner'].initial = user
+
+
+
+	class Meta:
+		model = Vendor
+		fields= ('name', 'image', 'address', 'governrate', 'open_at', 'close_at', 'phone', 'watts_app', 'email', 'category')
+
+
+class Product_Form(forms.ModelForm):
+	name = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' enter your product name'}), required=True , error_messages = {'required':"Please Enter your Name1"})
+	price = forms.DecimalField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' price'}), required=True , error_messages = {'required':"Please Enter your Name2"})
+	category = forms.ModelChoiceField(label="category",queryset=Category.objects.all() , required=True,  error_messages = {'required':"Please Enter your Name3"})
+	# vendor = forms.CharField(label="vendor", widget=forms.Select(attrs={'class':'form-control', 'disabled': 'disabled'}), required=False)
+	description = forms.CharField(label="description", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' description'}), required=True , error_messages = {'required':"Please Enter your Name4"})
+	image = forms.ImageField(label="upload product image", required=False,  error_messages = {'required':"Please Enter your Name5"})
+	is_sale = forms.BooleanField(label="is_sale", required=False , error_messages = {'required':"Please Enter your Name6"})
+	sale_price = forms.DecimalField(label="sale_price", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':' sale price'}), required=True , error_messages = {'required':"Please Enter your Name7"})
+	is_not_available = forms.BooleanField(label="is_not_available", required=False , error_messages = {'required':"Please Enter your Name8"})
+
+	def __init__(self, *args, **kwargs):
+			self.request = kwargs.pop("request")
+			super(Product_Form, self).__init__(*args, **kwargs)
+			# owner = Profile.objects.get(user=self.request.user)
+			# self.fields["vendor"].queryset = Vendor.objects.filter(owner = owner)
+
+	class Meta:
+		model = Product
+		fields = ("name", "price", "category", "description", "image", "is_sale", "sale_price", "is_not_available")

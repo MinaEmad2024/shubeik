@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Add a new Product</h1>
+                    <p class="lead fw-normal text-white-50 mb-0"></p>
+                </div>
+            </div>
+            </header>
+            
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class="col-8">
+
+
+                            <br><br>
+                            {% if user.is_authenticated %}      
+                                <form method="POST", action="" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ product_form.as_p}}
+                                <strong>Add new Product</strong>
+
+                                <button type="submit" class="btn btn-secondary">Add new product </button>
+                                </form>
+                            {% endif  %}  
+                        </div>
+                    </center>
+                </div>
+            </div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>             
+            
+{% endblock %}

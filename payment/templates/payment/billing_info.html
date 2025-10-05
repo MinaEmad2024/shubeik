@@ -6,7 +6,7 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Payment Info</h1>
+                    <h1 class="display-4 fw-bolder">Payment Info for {{ category }}</h1>
                     <p class="lead fw-normal text-white-50 mb-0">Your Payment Info</p>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                                     <br><br><br>                             
                             {% endfor %}
                             <strong>Total: ${{totals}}</strong>
-                            <a href="{% url 'cart_summary' %}" class="btn btn-sm btn-outline-secondary ">Update Items</a>
+                            <a href="{% url 'cart_summary' category %}" class="btn btn-sm btn-outline-secondary ">Update Items</a>
                             <br><br><br>
                             <div class="card">
                                 <div class="card-header">
@@ -53,7 +53,7 @@
                                   Zipcode: {{  shipping_info.shipping_zipcode  }} <br>
                                   Country: {{  shipping_info.shipping_country  }} <br>
                                   <br>
-                                  <a href="{% url 'checkout' %}" class="btn btn-outline-secondary"> Update Shipping</a>
+                                  <a href="{% url 'checkout' category %}" class="btn btn-outline-secondary"> Update Shipping</a>
                                 </div>
                               </div>
                               <br><br>
@@ -62,7 +62,7 @@
                                     Billing INfo
                                 </div>
                                 <div class="card-body">
-                                    <form method="POST" action="{% url 'process_order'%}">
+                                    <form method="POST" action="{% url 'process_order' category%}">
                                         {% csrf_token %}
                                     {{ billing_form.as_p}}
                                 </div>

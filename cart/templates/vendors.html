@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+        {% block content %}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Vendors</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+                </div>
+            </div>
+        </header>
+        <br><br>
+        <div class="container">
+            {% if categories %}
+            {% for category in categories %}
+            <div><h1>{{ category}}</h1><a href="{% url 'cart_summary' category.name  %}">go to {{category}}</a></div>
+            {% endfor %}
+
+            
+            {% else %} 
+             <p><B>Your cart is Empty </B></p>
+            {% endif %}
+
+        </div>
+
+        {%  endblock %}
+

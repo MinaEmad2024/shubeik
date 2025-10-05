@@ -21,6 +21,42 @@ class Cart():
         #Make sure the cart is available on all pages of the site
         self.cart = cart 
 
+    def __len__(self):
+        return len(self.cart)
+
+    def update(self, product, quantity):
+        product_id = str(product)
+        product_qty = int(quantity)
+        #get cart 
+        ourcart = self.cart
+        #update dictionary / cart 
+        ourcart[product_id] = product_qty
+
+        self.session.modified = True 
+        
+        
+        if self.request.user.is_authenticated:
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            #save carty to profile model 
+            current_user.update(old_cart = str(carty))
+        thing = self.cart 
+        return thing 
+    
+    def delete(self, product):
+        product_id = str(product)
+
+        if product_id in self.cart:
+            del self.cart[product_id]
+        self.session.modified = True
+        if self.request.user.is_authenticated:
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            #save carty to profile model 
+            current_user.update(old_cart = str(carty)) 
+
     def db_add(self, product, quantity):
         product_id = str(product)
         product_qty = str(quantity)
@@ -60,13 +96,13 @@ class Cart():
             #save carty to profile model 
             current_user.update(old_cart = str(carty))
 
-    def cart_total(self):
+    def cart_total(self, category):
         # get products ids
-        product_ids = self.cart.keys()
+        # product_ids = self.cart.keys()
         #lookup those keys in the products database
-        products = Product.objects.filter(id__in=product_ids)
+        products = self.get_products(category=category)# Product.objects.filter(id__in=product_ids)
         #get quantities
-        quantities = self.cart
+        quantities =  self.partial_cart(category=category) #self.cart
         #start counting at 0
         total = 0
         for key, value in quantities.items():
@@ -81,53 +117,85 @@ class Cart():
         return total
     
 
-    def __len__(self):
-        return len(self.cart)
+    def get_products(self, category):
+        #Get ids from cart
+        products_ids = self.cart.keys()
+        #use ids to lookup products in database model
 
-
-    def get_products(self):
+        products = Product.objects.filter(id__in=products_ids).filter(vendor__name=category)
+        # print(products)
+        # ### get a subset of products for each category
+        # category_products = []
+        # for product in products :
+        #     print(product.category)
+        #     print(product)
+        #     if product.category == category:
+        #         category_products.append(product)
+        # #return looked_up products
+        # print(category) 
+        # print(category_products)
+        # return category_products
+        return products 
+    
+    def get_all_products(self):
         #Get ids from cart
         products_ids = self.cart.keys()
 
         #use ids to lookup products in database model
         products = Product.objects.filter(id__in=products_ids)
-
         #return looked_up products 
         return products 
 
-    def get_quants(self):
-        quantities = self.cart
+    def partial_cart(self, category) :
+        category_products = self.get_products(category=category)
+        category_keys = []
+        for product in category_products:
+            category_keys.append(product.id)
+        items = self.cart
+        sub_items = {key:value for key, value in items.items()}
+        # for key, value in items.items():
+        #     if key not in category_keys:
+        #         del items[key]
+        return sub_items
+        # return items
+
+    def get_quants(self, category):
+        # quantities = self.cart
+        quantities = self.partial_cart(category=category)
         return quantities
     
-    def update(self, product, quantity):
-        product_id = str(product)
-        product_qty = int(quantity)
-        #get cart 
-        ourcart = self.cart
-        #update dictionary / cart 
-        ourcart[product_id] = product_qty
 
-        self.session.modified = True 
-        
-        
-        if self.request.user.is_authenticated:
-            current_user = Profile.objects.filter(user__id=self.request.user.id)
-            carty = str(self.cart)
-            carty = carty.replace("\'", "\"")
-            #save carty to profile model 
-            current_user.update(old_cart = str(carty))
-        thing = self.cart 
-        return thing 
-    
-    def delete(self, product):
-        product_id = str(product)
 
-        if product_id in self.cart:
-            del self.cart[product_id]
-        self.session.modified = True
-        if self.request.user.is_authenticated:
-            current_user = Profile.objects.filter(user__id=self.request.user.id)
-            carty = str(self.cart)
-            carty = carty.replace("\'", "\"")
-            #save carty to profile model 
-            current_user.update(old_cart = str(carty)) 
+    # def cart_total(self):
+    #     # get products ids
+    #     product_ids = self.cart.keys()
+    #     #lookup those keys in the products database
+    #     products = Product.objects.filter(id__in=product_ids)
+    #     #get quantities
+    #     quantities = self.cart
+    #     #start counting at 0
+    #     total = 0
+    #     for key, value in quantities.items():
+    #         #convert key string into intiger
+    #         key = int(key)
+    #         for product in products:
+    #             if product.id == key :
+    #                 if product.is_sale:
+    #                     total = total + (product.sale_price * value)
+    #                 else:
+    #                     total = total + (product.price * value)
+    #     return total
+
+    # def get_products(self):
+    #     #Get ids from cart
+    #     products_ids = self.cart.keys()
+
+    #     #use ids to lookup products in database model
+    #     products = Product.objects.filter(id__in=products_ids)
+
+    #     #return looked_up products 
+    #     return products 
+
+    # def get_quants(self):
+    #     quantities = self.cart
+    #     return quantities

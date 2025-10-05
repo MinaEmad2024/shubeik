@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+        <!-- Header-->
+        <div id="user-info" data-user-id="{{ shop_id }}"></div> 
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Edit current Product</h1>
+                    <p class="lead fw-normal text-white-50 mb-0"></p>
+                </div>
+            </div>
+            </header>
+            
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class="col-8">
+
+
+                            <br><br>
+                            {% if user.is_authenticated %}      
+                                <form method="POST", action="" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ product_form.as_p}}
+                                <strong>Edit Product</strong>
+
+                                <button type="submit" class="btn btn-secondary">edit product </button>
+                                </form>
+                            {% endif  %}  
+                        </div>
+                    </center>
+                </div>
+            </div>
+    <script>
+        // Get the select element by its ID
+            
+        // const userId = document.getElementById('user-info').dataset.userId;
+        // console.log(userId); // Use the user ID in JavaScript
+        // const selectElement = document.getElementById('id_owner');
+
+        // for (var i=0; i<selectElement.length; i++) {
+        // if (selectElement.options[i].value != userId)
+        // selectElement.remove(i);
+        // };
+        
+        // Disable the select element
+        // selectElement.disabled = true;
+    </script>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>             
+            
+{% endblock %}

@@ -6,7 +6,7 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
+                    <h1 class="display-4 fw-bolder">{{ category}}</h1>
                     <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
                 </div>
             </div>
@@ -18,8 +18,10 @@
             <div class="card mb-3" >
                 <div class="row g-0">
                   <div class="col-md-4">
+                    {% if product.image %}
                     <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.name }}">
-                  </div>
+                    {% endif %} 
+                </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <center>
@@ -74,7 +76,7 @@
             {% endfor %}
             <div align="right">
             <h3>Total: ${{ totals }}</h3>
-              <a href="{% url 'checkout' %}" class="btn btn-success">CheckOut</a>  
+              <a href="{% url 'checkout' category %}" class="btn btn-success">CheckOut</a>  
             </div>
             <br><br><br>
             

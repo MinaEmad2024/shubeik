@@ -12,6 +12,8 @@
                         <h3>Shipped Items </h3>
                         <div class="card">
                             <div class="card-header">
+                              Vendor: {{order.vendor}}
+                              <br>
                               Order: {{oder.id}} ${{order.amount_paid}}
                             </div>
                             <div class="card-body">
@@ -47,7 +49,7 @@
                             </div>
                           </div>
                           <br>
-                          <a href="{%url 'home'}" class="btn btn-primary">Go somewhere</a>
+                          <a href="{% url 'home' %}" class="btn btn-primary">Go Home</a>
                         <br><br>
                     </div>
                 </center>

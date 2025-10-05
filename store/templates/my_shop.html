@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+        <!-- Header-->
+        <div id="user-info" data-user-id="{{ request.user.id }}"></div>
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Edit shop </h1>
+                    <p class="lead fw-normal text-white-50 mb-0"></p>
+                </div>
+            </div>
+            </header>
+            
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class="col-8">
+                            <br><br>
+                            {% if user.is_authenticated %}   
+                                <h2>Update Current Shop</h2>   
+                                <form method="POST" action="{% url 'my_shop' shop.id %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                 {{ vendorform.as_p }}
+                                <!-- <strong>Update Shop</strong> -->
+                                <button type="submit" class="btn btn-secondary">Update Shop </button>
+                                </form>
+                            {% endif  %}  
+                        </div>
+                    </center>
+                </div>
+            </div>
+    <script>
+        // Get the select element by its ID
+            
+        // const userId = document.getElementById('user-info').dataset.userId;
+        // console.log(userId); // Use the user ID in JavaScript
+        // const selectElement = document.getElementById('id_owner');
+
+        // for (var i=0; i<selectElement.length; i++) {
+        // if (selectElement.options[i].value != userId)
+        // selectElement.remove(i);
+        // };
+        
+        // Disable the select element
+        // selectElement.disabled = true;
+    </script>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>             
+            
+{% endblock %}

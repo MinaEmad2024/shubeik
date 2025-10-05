@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Add a New shop </h1>
+                    <p class="lead fw-normal text-white-50 mb-0"></p>
+                </div>
+            </div>
+            </header>
+            
+            <div class="container">
+                <div class="row">
+                    <center>
+                        <div class="col-8">
+                            <br><br>
+                            {% if user.is_authenticated %}      
+                                <form method="POST", action="{% url 'add_new_shop' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                 {{ vendorform.as_p }}
+                                <strong>Add new Shop</strong>
+                                <button type="submit" class="btn btn-secondary" onclick= "handleSubmit()" >Add new Shop </button>
+                                </form>
+                            {% endif  %}  
+                        </div>
+                    </center>
+                </div>
+            </div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>             
+    <script>
+        // Get the select element by its ID
+        const selectElement = document.getElementById('id_owner');
+        const userInfo = JSON.parse('{{ user.id|safe|escapejs }}');
+        selectElement.value =  userInfo;
+        if (selectElement.value ==!  userInfo){
+           selectElement.value =  userInfo; 
+        };
+
+        // Disable the select element
+        // selectElement.disabled = true;   
+
+
+    </script>
+{% endblock %}

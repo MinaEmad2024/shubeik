@@ -18,8 +18,29 @@
             <div class="card mb-3" >
                 <div class="row g-0">
                   <div class="col-md-4">
+                    {% if product.image%}
                     <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.name }}">
-                  </div>
+                    {% endif %}
+                    <center>
+                    <div class="col-md-10">
+                        <div class="rating-card p-4">
+                            <div class="star-rating animated-stars">
+                                {% for _ in rating_B %}
+                                    <!-- <span class="fa fa-star "></span> -->
+                                <span><img width="48" height="48" src="https://img.icons8.com/windows/32/star--v1.png" alt="star--v1"/></span>
+                                {% endfor %}
+                                {% if half_star %}
+                                <span><img width="48" height="48" src="https://img.icons8.com/fluency/48/star-half-empty.png" alt="star-half-empty"/></span>
+                                {% endif %}
+                                {% for _ in rating_A %}
+                                    <!-- <span class="fa fa-star checked "></span> -->
+                                <span><img width="48" height="48" src="https://img.icons8.com/emoji/48/star-emoji.png" alt="star-emoji"/></span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </center>
                     <div class="col-md-8">
                         <div class="card-body">
                             <center>
@@ -52,7 +73,7 @@
                                     <option value="5">5</option>
                                     <option value="6">6</option>
                                 </select>
-                            </div>
+                            </div>  
                             </div>
                             <br><br><br><br><br><br><br>
                             <a href="{% url 'home' %}" class="btn btn-secondary">Go to Home</a>
@@ -63,8 +84,108 @@
                 </div>
             </div>
         </div>            
+        {% if user.is_authenticated %}
+        <center>
+                <form method="POST" action="{% url 'product' product.id  %}" >
+                    {% csrf_token%}
+                    <div class="form-group">
 
+                    <div class="col-md-6">
+                        <div class="rating-card p-4">
+                            <h5 class="mb-4" >التقييم </h5>
+                            <div class="star-rating animated-stars">
+                                <input type="radio" id="star5" name="rating" value="5">
+                                <label for="star5" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star4" name="rating" value="4">
+                                <label for="star4" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star3" name="rating" value="3">
+                                <label for="star3" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star2" name="rating" value="2">
+                                <label for="star2" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star1" name="rating" value="1">
+                                <label for="star1" class="bi bi-star-fill"></label>
+                            </div>
+                            <div class="">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Write your review 
+                                    </div>
+                                    <div class="card-body">
+                                            <input type="text" class="form-control"  placeholder="Write your review" name="review">
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-secondary">Click to Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+        </center>
+        {% endif %}
+        <center>
+            <br><br><br>
+            <h3>Customers Reviews</h3>
+            {% if reviews  %}
+               {% for review in reviews %}
+        <div class="container">
+        <div class="comments border border-light rounded bg-light text-dark"> 
+         <p class="font-weight-bold"> 
+           {{ review.name }} 
+           <span class=" text-muted font-weight-normal"> 
+             {{ review.created_on }}
+            </span>
+          </p>
+          {{ review.body | linebreaks }}
+        </div>
+        <br>
+        </div>
+        {% endfor %}
+        </center>
+        {% elif not user.is_authenticated %}
+        <p>لا توجد تققيمات لهذا المنتج , برجاء تسجيل حساب و كن اول من يكتب  تقييم لة  </p>
+        {% else %}
+        <p>لا توجد تققيمات لهذا المنتج , كن اول من يكتب  تقييم لة  </p> 
+        {% endif %}
+    </center>
+    
+            <style>
+                .star-rating {
+                    direction: rtl;
+                    display: inline-block;
+                    cursor: pointer;
+                }
 
+                .star-rating input {
+                    display: none;
+                }
+
+                .star-rating label {
+                    color: #ddd;
+                    font-size: 24px;
+                    padding: 0 2px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .star-rating label:hover,
+                .star-rating label:hover~label,
+                .star-rating input:checked~label {
+                    color: #ffc107;
+                }
+                .checked {
+                    color: orange;
+                }
+            </style>
+            <script>
+                document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
+                    star.addEventListener('click', function() {
+                        this.style.transform = 'scale(1.2)';
+                        setTimeout(() => {
+                            this.style.transform = 'scale(1)';
+                        }, 200);
+                    });
+                });
+            </script>
             <br><br><br><br><br><br><br><br><br><br>
             <script>
                 // check if a button presses

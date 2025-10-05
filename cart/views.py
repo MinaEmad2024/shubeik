@@ -6,13 +6,23 @@ from django.contrib import messages
 
 # Create your views here.
 
-def cart_summary(request):
+def cart_summary(request, category):
     cart = Cart(request)
-    cart_products = cart.get_products
-    quantities = cart.get_quants
-    totals = cart.cart_total()
-    return render(request, 'cart_summary.html', {"cart_products": cart_products, 'quantities':quantities,'totals':totals})
+    cart_products = cart.get_products(category=category)
+    quantities = cart.get_quants(category=category)
+    totals = cart.cart_total(category=category)
+    return render(request, 'cart_summary.html', {"cart_products": cart_products, 'quantities':quantities,'totals':totals, 'category' :category})
+    
 
+def cart_vendors(request) :
+
+    cart= Cart(request)
+    cart_products = cart.get_all_products()
+    categories = [] # get all categories from the cart items
+    for product in cart_products:
+        categories.append(product.vendor)
+    new_categories = set(categories)
+    return render(request, 'vendors.html', {"categories":new_categories})
 
 
 def cart_add(request):

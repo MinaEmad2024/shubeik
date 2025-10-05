@@ -19,10 +19,19 @@
                     <center>
                         <div class="col-8">
                             {%for category in categories%}
-                            <h3> <a href="{%url 'category' category%}">{{ category }}</a></h3>
+                            <h3> <a href="{%url 'category' category.name %}">{{ category.name }}</a></h3>
                             {% endfor %}
+
                             <br><br>
                             <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                            {% if user.is_authenticated %}      
+                                <form method="POST", action="{% url 'category_summary'%}">
+                                {% csrf_token %}
+                                <strong>Add new Category</strong>
+                                {{ category_form.as_p}}
+                                <button type="submit" class="btn btn-secondary">Add new Category </button>
+                                </form>
+                            {% endif  %}  
                         </div>
                     </center>
                 </div>
